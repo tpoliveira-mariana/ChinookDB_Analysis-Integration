@@ -55,4 +55,33 @@
 # data warehouse.   
 
 	In MySQL execute the following command:
-		$ source challenge4_dw_script.sql;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+		$ source challenge4_dw_script.sql;      
+
+# Challenge 6
+# Once the data warehouse has been created and populated, write two SQL queries to illustrate the types 
+# of analysis that can be carried out with pure SQL over the data warehouse. The queries should involve 
+# multiple dimensions. Using your own words, briefly explain what each query is doing, and show the query
+# results (or an excerpt of the results, if they are too large).
+
+	1. The following query allows us to see the sales made by each artist per year. As such, after joining the necessary tables (fact_invoice, dim_time and dim_track), we obtain the value of every invoice line (LineTotal) per artist, per year. The years are in descending order. For each year, we then order the artist according to their total sales. If there are two artist with the same TotalSales value, they are presented in alphabetic order.
+
+		SELECT time.YearId as Year, track.ArtistName, SUM(fact.LineTotal) as TotalSales
+		FROM fact_invoice fact
+		NATURAL JOIN dim_time time
+		NATURAL JOIN dim_track track
+		GROUP BY Year, track.ArtistName
+		ORDER BY Year DESC, TotalSales DESC, track.ArtistName ASC;
+
+	2. The following query allows us to see which were the 5 (limit 5) Albums that, since 2010 (WHERE time.YearId >= 2010), had more customers. In fact, first we select all the records from 2010 on, then group them by year and album title in order to obtain a count of distinct customerId's per AlbumTitle, per Year. The years are shown in descending order. Then, for each year, the records are in descending order with respect to the number of customers associated to it. If two records have equal number of customers, they are presented in alphabetical order with repect to the Album title. 
+	(Not all results are shown in the corresponding image.)
+
+		SELECT time.YearId as Year, track.AlbumTitle, COUNT(distinct fact.CustomerId) as Customers
+		FROM  fact_invoice fact
+		NATURAL JOIN dim_time time
+		NATURAL JOIN dim_track track
+		WHERE time.YearId >= 2010
+		GROUP BY Year, track.AlbumTitle
+		ORDER BY Year DESC, Customers DESC, AlbumTitle ASC
+		LIMIT 5;
+
+

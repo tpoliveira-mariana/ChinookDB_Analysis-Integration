@@ -33,7 +33,7 @@ CREATE TABLE fact_invoice (
 	InvoiceLineId INT,
 	UnitPrice decimal(10, 2),
 	Quantity INT,
-	LineTotal DOUBLE,
+	LineTotal decimal(10, 2),
 	CustomerId INT,
 	TrackId INT,
 	TimeId DATETIME,
