@@ -15,7 +15,7 @@
       </Hierarchy>
     </Dimension>
     <Dimension type="StandardDimension" visible="true" foreignKey="TrackId" name="Tracks">
-      <Hierarchy name="Track Hierarchy" visible="true" hasAll="false" allMemberName="All Tracks" primaryKey="TrackID">
+      <Hierarchy name="Track Hierarchy" visible="true" hasAll="true" allMemberName="All Tracks" primaryKey="TrackId">
         <Table name="dim_track">
         </Table>
         <Level name="Track Name" visible="true" column="TrackName" type="String" uniqueMembers="false" levelType="Regular">
@@ -38,7 +38,7 @@
         </Level>
       </Hierarchy>
     </Dimension>
-    <Measure name="Sales" column="LineTotal" datatype="Numeric" formatString="$#,###.00" aggregator="sum" visible="true">
+    <Measure name="Sales" column="LineTotal" datatype="Numeric" formatString="$ #,###.00" aggregator="sum" visible="true">
     </Measure>
     <Measure name="Quantity" column="Quantity" datatype="Integer" formatString="#,###" aggregator="sum" visible="true">
     </Measure>

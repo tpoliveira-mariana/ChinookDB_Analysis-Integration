@@ -4,7 +4,7 @@ CREATE DATABASE chinook_dw;
 USE chinook_dw;
 
 CREATE TABLE dim_track (
-	TrackID INT,
+	TrackId INT,
 	TrackName VARCHAR(200),
 	AlbumTitle VARCHAR(160),
 	ArtistName VARCHAR(120),
@@ -38,7 +38,7 @@ CREATE TABLE fact_invoice (
 	TrackId INT,
 	TimeId DATETIME,
 	PRIMARY KEY (InvoiceId, InvoiceLineId),
-	FOREIGN KEY (TrackID) REFERENCES dim_track (TrackId),
+	FOREIGN KEY (TrackId) REFERENCES dim_track (TrackId),
 	FOREIGN KEY (CustomerId) REFERENCES dim_customer (CustomerId),
 	FOREIGN KEY (TimeId) REFERENCES dim_time (TimeId)
 );
