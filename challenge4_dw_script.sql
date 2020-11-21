@@ -24,15 +24,20 @@ CREATE TABLE dim_time (
 	YearId INT,
 	MonthId INT,
 	MonthName VARCHAR(255),
+	DayId INT,
 	PRIMARY KEY (TimeId)
 );
 
-CREATE TABLE fact_chinook (
-	TrackId INT,
-	CustomerId INT,
+CREATE TABLE fact_invoice (
+	InvoiceId INT,
+	InvoiceLineId INT,
 	UnitPrice decimal(10, 2),
+	Quantity INT,
+	LineTotal DOUBLE,
+	CustomerId INT,
+	TrackId INT,
 	TimeId DATETIME,
-	PRIMARY KEY (TrackId,CustomerId, TimeId),
+	PRIMARY KEY (InvoiceId, InvoiceLineId),
 	FOREIGN KEY (TrackID) REFERENCES dim_track (TrackId),
 	FOREIGN KEY (CustomerId) REFERENCES dim_customer (CustomerId),
 	FOREIGN KEY (TimeId) REFERENCES dim_time (TimeId)
