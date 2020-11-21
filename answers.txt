@@ -1,0 +1,46 @@
+# Challenge 1
+# In the database, there is the concept of Customer and Employee. The company wants to create a
+# new concept, called Contact, which may be either a customer or an employee. You are asked to
+# develop a unified view over the Customer and Employee tables to provide this new concept. The
+# view should use the common attributes between both tables.
+
+	create or replace view Contact(FirstName, LastName, Address, City, State, Country, PostalCode, Phone, Fax, Email) as
+		select FirstName, LastName, Address, City, State, Country, PostalCode, Phone, Fax, Email
+		from Customer
+
+		union
+
+		select FirstName, LastName, Address, City, State, Country, PostalCode, Phone, Fax, Email
+		from Employee;
+
+# Challenge 3
+# The company is worried about the quality of data in the Customer table. Use a data profiling
+# tool to conduct an analysis and provide your own conclusions with respect to completeness,
+# string fields, referential integrity, and value distributions.
+
+	-> Completeness:
+		- 50 out of the 59 records have some kind of information missing.
+		- Only 10 out of the 59 records use the Company field.
+		- Some records (29/59) do not use the State field.
+		- Some records (4/59) have no PostalCode. 
+		- Only 11 ou of the 59 records use the Fax field.
+		- 1 record has no Phone.
+
+	-> Referential Integrity:
+		- Regarding the field SupportRepId, there are no unresolved values, meaning that every SupportRepId in the Customer table exists as an EmployeeId in the Employee table. 
+
+	-> String Fields:
+		- The longest string  (48 chars) appears in the Company field.
+		- On average, the field Email has the longest strings (21.017 chars).
+		- Only the fields FirstName, State and Email have a single word and no spaces in all records.
+		- Only the Email field is written entirely in lowercase.
+		- There is no field with its string written entirely in uppercase.
+		- The strings on the fields FirstName, LastName, Company, City, State, and Country have no digits.
+		- Some of the chars in Address (163/1055) and Email (5/1240) are digits.
+		- Most of the chars in PostalCode (273/332), Phone (676/973) and Fax (138/208) are digits.
+		- Diacritic chars are used in all fields except for State, Country, PostalCOde, Phone and Fax.
+
+	-> Value Distributions:
+		- 49 out of the 59 customers are individuals. The remaining 10 represent 10 different companies.
+		- There are customers form 24 distinct countries. Most of them are from the USA (13), Canada (8), Brazil (5) and France(5).     
+		- All of the 59 customers are supported by only 3 distinct Representatives, with id's 3, 4 and 5.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       

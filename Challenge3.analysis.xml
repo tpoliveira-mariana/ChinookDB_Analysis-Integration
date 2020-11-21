@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<job xmlns="http://eobjects.org/analyzerbeans/job/1.0">
+    <job-metadata>
+        <job-description>Created with DataCleaner Community edition 5.4.0</job-description>
+        <author>aid</author>
+        <updated-date>2020-11-21Z</updated-date>
+        <metadata-properties>
+            <property name="CoordinatesX.Chinook.Customer">139</property>
+            <property name="CoordinatesY.Chinook.Customer">149</property>
+        </metadata-properties>
+    </job-metadata>
+    <source>
+        <data-context ref="Chinook"/>
+        <columns>
+            <column id="col_customerid" path="Chinook.Customer.CustomerId" type="INTEGER"/>
+            <column id="col_firstname" path="Chinook.Customer.FirstName" type="VARCHAR"/>
+            <column id="col_lastname" path="Chinook.Customer.LastName" type="VARCHAR"/>
+            <column id="col_company" path="Chinook.Customer.Company" type="VARCHAR"/>
+            <column id="col_address" path="Chinook.Customer.Address" type="VARCHAR"/>
+            <column id="col_city" path="Chinook.Customer.City" type="VARCHAR"/>
+            <column id="col_state" path="Chinook.Customer.State" type="VARCHAR"/>
+            <column id="col_country" path="Chinook.Customer.Country" type="VARCHAR"/>
+            <column id="col_postalcode" path="Chinook.Customer.PostalCode" type="VARCHAR"/>
+            <column id="col_phone" path="Chinook.Customer.Phone" type="VARCHAR"/>
+            <column id="col_fax" path="Chinook.Customer.Fax" type="VARCHAR"/>
+            <column id="col_email" path="Chinook.Customer.Email" type="VARCHAR"/>
+            <column id="col_supportrepid" path="Chinook.Customer.SupportRepId" type="INTEGER"/>
+        </columns>
+    </source>
+    <transformation/>
+    <analysis>
+        <analyzer>
+            <descriptor ref="Completeness analyzer"/>
+            <metadata-properties>
+                <property name="CoordinatesY">144</property>
+                <property name="CoordinatesX">267</property>
+            </metadata-properties>
+            <properties>
+                <property name="Conditions" value="[NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL,NOT_BLANK_OR_NULL]"/>
+                <property name="Evaluation mode" value="ANY_FIELD"/>
+            </properties>
+            <input ref="col_customerid" name="Values"/>
+            <input ref="col_firstname" name="Values"/>
+            <input ref="col_lastname" name="Values"/>
+            <input ref="col_company" name="Values"/>
+            <input ref="col_address" name="Values"/>
+            <input ref="col_city" name="Values"/>
+            <input ref="col_state" name="Values"/>
+            <input ref="col_country" name="Values"/>
+            <input ref="col_postalcode" name="Values"/>
+            <input ref="col_phone" name="Values"/>
+            <input ref="col_fax" name="Values"/>
+            <input ref="col_email" name="Values"/>
+            <input ref="col_supportrepid" name="Values"/>
+        </analyzer>
+        <analyzer>
+            <descriptor ref="Referential integrity"/>
+            <metadata-properties>
+                <property name="CoordinatesY">256</property>
+                <property name="CoordinatesX">265</property>
+            </metadata-properties>
+            <properties>
+                <property name="Datastore" value="Chinook"/>
+                <property name="Schema name" value="Chinook"/>
+                <property name="Table name" value="Employee"/>
+                <property name="Column name" value="EmployeeId"/>
+                <property name="Cache lookups" value="true"/>
+                <property name="Ignore null values" value="true"/>
+            </properties>
+            <input ref="col_supportrepid"/>
+        </analyzer>
+        <analyzer>
+            <descriptor ref="String analyzer"/>
+            <metadata-properties>
+                <property name="CoordinatesY">352</property>
+                <property name="CoordinatesX">269</property>
+            </metadata-properties>
+            <properties/>
+            <input ref="col_firstname"/>
+            <input ref="col_lastname"/>
+            <input ref="col_company"/>
+            <input ref="col_address"/>
+            <input ref="col_city"/>
+            <input ref="col_state"/>
+            <input ref="col_country"/>
+            <input ref="col_postalcode"/>
+            <input ref="col_phone"/>
+            <input ref="col_fax"/>
+            <input ref="col_email"/>
+        </analyzer>
+        <analyzer>
+            <descriptor ref="Value distribution"/>
+            <metadata-properties>
+                <property name="CoordinatesY">459</property>
+                <property name="CoordinatesX">270</property>
+            </metadata-properties>
+            <properties>
+                <property name="Record unique values" value="true"/>
+                <property name="Record drill-down information" value="true"/>
+                <property name="Top n most frequent values" value="&lt;null&gt;"/>
+                <property name="Bottom n most frequent values" value="&lt;null&gt;"/>
+            </properties>
+            <input ref="col_company" name="Column"/>
+            <input ref="col_country" name="Column"/>
+            <input ref="col_supportrepid" name="Column"/>
+        </analyzer>
+    </analysis>
+</job>
