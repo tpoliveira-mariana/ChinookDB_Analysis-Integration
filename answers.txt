@@ -83,5 +83,11 @@
 		GROUP BY Year, track.AlbumTitle
 		ORDER BY Year DESC, Customers DESC, AlbumTitle ASC
 		LIMIT 5;
+		
+# Challenge 7
+# Use Pentaho Schema Workbench (PSW) to define the data cube for the data warehouse.
+
+	See 'challenge7.xml'
+
 
 
