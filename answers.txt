@@ -89,5 +89,62 @@
 
 	See 'challenge7.xml'
 
+# Challenge 9
+# Simplify as much as possible the MDX code that Saiku has generated for the previous queries, 
+# making them more easily readable or understandable by a human.
+
+	1. Original:
+		WITH
+			SET [~COLUMNS] AS
+			    {[Time].[Time Hierarchy].[Year].Members}
+			SET [~ROWS] AS
+			    {[Customer].[Customer Hierarchy].[Country].Members}
+		SELECT
+			CrossJoin([~COLUMNS], {[Measures].[Sales]}) ON COLUMNS,
+			[~ROWS] ON ROWS
+		FROM [Invoices]
+
+	Simplified:
+		SELECT 
+		    CrossJoin(Time.Year.Members, Measures.Sales) ON COLUMNS,
+		    Customer.Country.Members ON ROWS
+		FROM Invoices
+
+	2. Original:
+		WITH
+			SET [~Customer_Customer Hierarchy_Country] AS
+			    {[Customer].[Customer Hierarchy].[USA]}
+			SET [~Customer_Customer Hierarchy_City] AS
+			    Exists({[Customer].[Customer Hierarchy].[City].Members}, [~Customer_Customer Hierarchy_Country])
+			SET [~COLUMNS] AS
+			    Hierarchize({[~Customer_Customer Hierarchy_Country], [~Customer_Customer Hierarchy_City]})
+			SET [~Time_Time Hierarchy_Year] AS
+			    {[Time].[Time Hierarchy].[2013]}
+			SET [~Time_Time Hierarchy_Month] AS
+			    Exists({[Time].[Time Hierarchy].[Month].Members}, [~Time_Time Hierarchy_Year])
+			SET [~ROWS] AS
+			    Hierarchize({[~Time_Time Hierarchy_Year], [~Time_Time Hierarchy_Month]})
+		SELECT
+			NON EMPTY CrossJoin([~COLUMNS], {[Measures].[Sales], [Measures].[Quantity]}) ON COLUMNS,
+			NON EMPTY [~ROWS] ON ROWS
+		FROM [Invoices]
+
+	Simplified:
+		WITH
+			SET GetCities_USA AS
+				Exists(Customer.City.Members, Customer.Country.USA)
+
+			SET USA_Cities AS
+				Hierarchize({Customer.Country.USA, GetCities_USA})
+
+			SET GetMonths_2013 AS
+				Exists(Time.Month.Members, Time.Year.[2013])
+				
+			SET Months_2013 AS
+				Hierarchize({Time.Year.[2013], GetMonths_2013})
+		SELECT
+			NON EMPTY CrossJoin(USA_Cities, {Measures.Sales, Measures.Quantity}) ON COLUMNS,
+			NON EMPTY Months_2013 ON ROWS
+		FROM Invoices
 
 
