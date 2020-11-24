@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>transf-dim_time</name>
+    <name>challenge_11-facts</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -428,9 +428,9 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2020/11/21 16:53:24.995</created_date>
+    <created_date>2020/11/21 17:15:58.879</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2020/11/21 16:53:24.995</modified_date>
+    <modified_date>2020/11/21 17:15:58.879</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -492,11 +492,11 @@
     </attributes>
   </connection>
   <connection>
-    <name>chinook_dw</name>
+    <name>Chinook DW SC</name>
     <server>localhost</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>chinook_dw</database>
+    <database>chinook_dw_sc</database>
     <port>3306</port>
     <username>aid</username>
     <password>Encrypted 2be98afc86aa7f2e4cb79ce10be93a6de</password>
@@ -549,16 +549,26 @@
   <order>
     <hop>
       <from>Table input</from>
-      <to>Year-Month-Day</to>
+      <to>Quantity2Number</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Year-Month-Day</from>
-      <to>Month Names</to>
+      <from>Quantity2Number</from>
+      <to>Line Total</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Month Names</from>
+      <from>Line Total</from>
+      <to>Quantity2Integer</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Quantity2Integer</from>
+      <to>Database lookup</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Database lookup</from>
       <to>Insert / update</to>
       <enabled>Y</enabled>
     </hop>
@@ -574,41 +584,62 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>chinook_dw</connection>
+    <connection>Chinook DW SC</connection>
     <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
-      <schema>chinook_dw</schema>
-      <table>dim_time</table>
+      <schema>chinook_dw_sc</schema>
+      <table>fact_invoice</table>
       <key>
-        <name>InvoiceDate</name>
-        <field>TimeId</field>
+        <name>InvoiceId</name>
+        <field>InvoiceId</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>InvoiceLineId</name>
+        <field>InvoiceLineId</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
+        <name>InvoiceId</name>
+        <rename>InvoiceId</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>InvoiceLineId</name>
+        <rename>InvoiceLineId</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>TrackId</name>
+        <rename>TrackId</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>UnitPrice</name>
+        <rename>UnitPrice</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Quantity</name>
+        <rename>Quantity</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Customer_ID</name>
+        <rename>Customer_ID</rename>
+        <update>Y</update>
+      </value>
+      <value>
         <name>TimeId</name>
-        <rename>InvoiceDate</rename>
+        <rename>TimeId</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>YearId</name>
-        <rename>YearId</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>MonthId</name>
-        <rename>MonthId</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>DayId</name>
-        <rename>DayId</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>MonthName</name>
-        <rename>MonthName</rename>
+        <name>LineTotal</name>
+        <rename>LineTotal</rename>
         <update>Y</update>
       </value>
     </lookup>
@@ -621,14 +652,14 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>144</yloc>
+      <xloc>576</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Month Names</name>
-    <type>ValueMapper</type>
+    <name>Line Total</name>
+    <type>Calculator</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -637,58 +668,66 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <field_to_use>MonthId</field_to_use>
-    <target_field>MonthName</target_field>
-    <non_match_default/>
+    <failIfNoFile>Y</failIfNoFile>
+    <calculation>
+      <field_name>LineTotal</field_name>
+      <calc_type>MULTIPLY</calc_type>
+      <field_a>Quantity</field_a>
+      <field_b>UnitPrice</field_b>
+      <field_c/>
+      <value_type>Number</value_type>
+      <value_length>-1</value_length>
+      <value_precision>-1</value_precision>
+      <remove>N</remove>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <currency_symbol/>
+    </calculation>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Quantity2Integer</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
     <fields>
-      <field>
-        <source_value>1</source_value>
-        <target_value>Jan</target_value>
-      </field>
-      <field>
-        <source_value>2</source_value>
-        <target_value>Feb</target_value>
-      </field>
-      <field>
-        <source_value>3</source_value>
-        <target_value>Mar</target_value>
-      </field>
-      <field>
-        <source_value>4</source_value>
-        <target_value>Apr</target_value>
-      </field>
-      <field>
-        <source_value>5</source_value>
-        <target_value>May</target_value>
-      </field>
-      <field>
-        <source_value>6</source_value>
-        <target_value>Jun</target_value>
-      </field>
-      <field>
-        <source_value>7</source_value>
-        <target_value>Jul</target_value>
-      </field>
-      <field>
-        <source_value>8</source_value>
-        <target_value>Aug</target_value>
-      </field>
-      <field>
-        <source_value>9</source_value>
-        <target_value>Sep</target_value>
-      </field>
-      <field>
-        <source_value>10</source_value>
-        <target_value>Oct</target_value>
-      </field>
-      <field>
-        <source_value>11</source_value>
-        <target_value>Nov</target_value>
-      </field>
-      <field>
-        <source_value>12</source_value>
-        <target_value>Dec</target_value>
-      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>Quantity</name>
+        <rename>Quantity</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -699,8 +738,53 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>144</yloc>
+      <xloc>352</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Quantity2Number</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>Quantity</name>
+        <rename>Quantity</rename>
+        <type>Number</type>
+        <length>9</length>
+        <precision>0</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -717,8 +801,15 @@
     </partitioning>
     <connection>Chinook</connection>
     <sql>SELECT
-	InvoiceDate 
-FROM Invoice
+	InvoiceId
+,  	InvoiceLineId
+, 	TrackId
+, 	UnitPrice
+, 	Quantity
+,	CustomerId
+,	InvoiceDate as TimeId
+FROM Invoice 
+NATURAL JOIN InvoiceLine
 </sql>
     <limit>0</limit>
     <lookup/>
@@ -728,13 +819,151 @@ FROM Invoice
     <cached_row_meta_active>N</cached_row_meta_active>
     <row-meta>
       <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>InvoiceId</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Table input</origin>
+        <comments>InvoiceId</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol>,</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>en_US</date_format_locale>
+        <date_format_timezone>Europe/Lisbon</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>InvoiceLineId</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Table input</origin>
+        <comments>InvoiceLineId</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol>,</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>en_US</date_format_locale>
+        <date_format_timezone>Europe/Lisbon</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>TrackId</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Table input</origin>
+        <comments>TrackId</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol>,</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>en_US</date_format_locale>
+        <date_format_timezone>Europe/Lisbon</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Number</type>
+        <storagetype>normal</storagetype>
+        <name>UnitPrice</name>
+        <length>10</length>
+        <precision>2</precision>
+        <origin>Table input</origin>
+        <comments>UnitPrice</comments>
+        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol>,</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>en_US</date_format_locale>
+        <date_format_timezone>Europe/Lisbon</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>Quantity</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Table input</origin>
+        <comments>Quantity</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol>,</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>en_US</date_format_locale>
+        <date_format_timezone>Europe/Lisbon</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>CustomerId</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>Table input</origin>
+        <comments>CustomerId</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol>,</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>en_US</date_format_locale>
+        <date_format_timezone>Europe/Lisbon</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
         <type>Timestamp</type>
         <storagetype>normal</storagetype>
-        <name>InvoiceDate</name>
+        <name>TimeId</name>
         <length>0</length>
         <precision>-1</precision>
         <origin>Table input</origin>
-        <comments>InvoiceDate</comments>
+        <comments>TimeId</comments>
         <conversion_Mask/>
         <decimal_symbol>.</decimal_symbol>
         <grouping_symbol>,</grouping_symbol>
@@ -760,14 +989,14 @@ FROM Invoice
       </output>
     </remotesteps>
     <GUI>
-      <xloc>48</xloc>
-      <yloc>144</yloc>
+      <xloc>32</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Year-Month-Day</name>
-    <type>Calculator</type>
+    <name>Database lookup</name>
+    <type>DBLookup</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -776,52 +1005,41 @@ FROM Invoice
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <failIfNoFile>Y</failIfNoFile>
-    <calculation>
-      <field_name>YearId</field_name>
-      <calc_type>YEAR_OF_DATE</calc_type>
-      <field_a>InvoiceDate</field_a>
-      <field_b/>
-      <field_c/>
-      <value_type>None</value_type>
-      <value_length>-1</value_length>
-      <value_precision>-1</value_precision>
-      <remove>N</remove>
-      <conversion_mask/>
-      <decimal_symbol/>
-      <grouping_symbol/>
-      <currency_symbol/>
-    </calculation>
-    <calculation>
-      <field_name>MonthId</field_name>
-      <calc_type>MONTH_OF_DATE</calc_type>
-      <field_a>InvoiceDate</field_a>
-      <field_b/>
-      <field_c/>
-      <value_type>None</value_type>
-      <value_length>-1</value_length>
-      <value_precision>-1</value_precision>
-      <remove>N</remove>
-      <conversion_mask/>
-      <decimal_symbol/>
-      <grouping_symbol/>
-      <currency_symbol/>
-    </calculation>
-    <calculation>
-      <field_name>DayId</field_name>
-      <calc_type>DAY_OF_MONTH</calc_type>
-      <field_a>InvoiceDate</field_a>
-      <field_b/>
-      <field_c/>
-      <value_type>None</value_type>
-      <value_length>-1</value_length>
-      <value_precision>-1</value_precision>
-      <remove>N</remove>
-      <conversion_mask/>
-      <decimal_symbol/>
-      <grouping_symbol/>
-      <currency_symbol/>
-    </calculation>
+    <connection>Chinook DW SC</connection>
+    <cache>N</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema>chinook_dw_sc</schema>
+      <table>dim_customer</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>CustomerId</name>
+        <field>CustomerId</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>TimeId</name>
+        <field>DATE_FROM</field>
+        <condition>&lt;=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>TimeId</name>
+        <field>DATE_TO</field>
+        <condition>&gt;</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>Customer_ID</name>
+        <rename>Customer_ID</rename>
+        <default/>
+        <type>Integer</type>
+      </value>
+    </lookup>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -831,8 +1049,8 @@ FROM Invoice
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
-      <yloc>144</yloc>
+      <xloc>464</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

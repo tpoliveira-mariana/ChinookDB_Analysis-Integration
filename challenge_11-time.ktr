@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>transf-dim_time</name>
+    <name>challenge_11-time</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -492,11 +492,11 @@
     </attributes>
   </connection>
   <connection>
-    <name>chinook_dw</name>
+    <name>Chinook DW SC</name>
     <server>localhost</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>chinook_dw</database>
+    <database>chinook_dw_sc</database>
     <port>3306</port>
     <username>aid</username>
     <password>Encrypted 2be98afc86aa7f2e4cb79ce10be93a6de</password>
@@ -574,11 +574,11 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>chinook_dw</connection>
+    <connection>Chinook DW SC</connection>
     <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
-      <schema>chinook_dw</schema>
+      <schema>chinook_dw_sc</schema>
       <table>dim_time</table>
       <key>
         <name>InvoiceDate</name>

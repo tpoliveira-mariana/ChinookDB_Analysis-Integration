@@ -147,4 +147,43 @@
 			NON EMPTY Months_2013 ON ROWS
 		FROM Invoices
 
+# Challenge 11
+# Turn the customer dimension into a slowly-changing dimension, so that if a customer changes
+# city or country, a new version of that customer will be created. Describe the modifications
+# that you had to do in order to implement this slowly-changing dimension, and present an example
+# to show that it is working.
+
+	Changes:
+		1. See challenge11_dw_script.sql
+			- CustomerId is no longer the primary key of the dim_customer table because we will now have have multiple records for the same customer. For that reason, Customer_ID was created. Every new update on a customer will have a Customer_ID that correspondes to the maximum Customer_ID + 1.
+			- Such modification allows us to have multiple an history of one same client's information.
+		2. Only the transformations regarding the customer dimension and the fact table had to be changed.
+		   Regarding the customer dimension:
+			   	- The Insert / Update step was replaced by a Dimension lookup/update. 
+			   	- The technical key is set to be Customer_ID, otherwise everytime there was a change in a customer's information, when trying to insert the new info, it would return a duplicate key error and fail.
+
+		   Fact table:
+		   		- A Database lookup step was inserted before the Insert / Update.
+		   		- This was needed because the fact table no longer has the CustomerId as it comes from the Chinook database, but the technical key Customer_ID. As such the lookup allows us to get the Customer_ID corresponding to a certain CustomerId.
+
+		<<show prints>>
+
+
+	Example:
+		mysql>use Chinook;
+
+		mysql>select CustomerId, FirstName, LastName, City, Country from Customer limit 5;
+
+			// we will change the fist result:
+			// 1 | Luís       | Gonçalves    | São José dos Campos   | Brazil  
+
+		mysql> update Customer set FirstName="John", LastName="Cena" where CustomerId = 1;
+
+			// run the transformation for dim_customer again
+
+		mysql> use chinook_dw_sc;
+
+		mysql> select * from dim_customer where CustomerId = 1;
+		
+			// 2 rows are displayed, one with the original information and VERSION = 1 and one reflecting the update made previously and VERSION = 2
 
