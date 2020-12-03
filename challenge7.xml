@@ -2,39 +2,39 @@
   <Cube name="Invoices" visible="true" cache="true" enabled="true">
     <Table name="fact_invoice">
     </Table>
-    <Dimension type="StandardDimension" visible="true" foreignKey="CustomerId" name="Customer">
+    <Dimension type="StandardDimension" visible="true" foreignKey="CustomerId" highCardinality="false" name="Customer">
       <Hierarchy name="Customer Hierarchy" visible="true" hasAll="true" allMemberName="All Customers" primaryKey="CustomerId">
         <Table name="dim_customer">
         </Table>
-        <Level name="Country" visible="true" column="CustomerCountry" type="String" uniqueMembers="false" levelType="Regular">
+        <Level name="Country" visible="true" column="CustomerCountry" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
         </Level>
-        <Level name="City" visible="true" column="CustomerCity" type="String" uniqueMembers="false" levelType="Regular">
+        <Level name="City" visible="true" column="CustomerCity" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
         </Level>
-        <Level name="Customer Name" visible="true" column="CustomerName" type="String" uniqueMembers="false" levelType="Regular">
+        <Level name="Customer Name" visible="true" column="CustomerName" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
         </Level>
       </Hierarchy>
     </Dimension>
-    <Dimension type="StandardDimension" visible="true" foreignKey="TrackId" name="Tracks">
+    <Dimension type="StandardDimension" visible="true" foreignKey="TrackId" highCardinality="false" name="Tracks">
       <Hierarchy name="Track Hierarchy" visible="true" hasAll="true" allMemberName="All Tracks" primaryKey="TrackId">
         <Table name="dim_track">
         </Table>
-        <Level name="Track Name" visible="true" column="TrackName" type="String" uniqueMembers="false" levelType="Regular">
+        <Level name="Artist Name" visible="true" column="ArtistName" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
         </Level>
-        <Level name="Album Title" visible="true" column="AlbumTitle" type="String" uniqueMembers="false" levelType="Regular">
+        <Level name="Album Title" visible="true" column="AlbumTitle" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
         </Level>
-        <Level name="Artist Name" visible="true" column="ArtistName" type="String" uniqueMembers="false" levelType="Regular">
+        <Level name="Track Name" visible="true" column="TrackName" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
         </Level>
       </Hierarchy>
     </Dimension>
-    <Dimension type="TimeDimension" visible="true" foreignKey="TimeId" name="Time">
+    <Dimension type="TimeDimension" visible="true" foreignKey="TimeId" highCardinality="false" name="Time">
       <Hierarchy name="Time Hierarchy" visible="true" hasAll="true" allMemberName="All  Years" primaryKey="TimeId">
         <Table name="dim_time">
         </Table>
-        <Level name="Year" visible="true" column="YearId" type="Integer" uniqueMembers="false" levelType="TimeYears">
+        <Level name="Year" visible="true" column="YearId" type="Integer" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never">
         </Level>
-        <Level name="Month" visible="true" column="MonthName" ordinalColumn="MonthId" type="String" uniqueMembers="false" levelType="TimeMonths">
+        <Level name="Month" visible="true" column="MonthName" ordinalColumn="MonthId" type="String" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never">
         </Level>
-        <Level name="Day" visible="true" column="DayId" type="Integer" uniqueMembers="false" levelType="TimeDays">
+        <Level name="Day" visible="true" column="DayId" type="Integer" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never">
         </Level>
       </Hierarchy>
     </Dimension>
